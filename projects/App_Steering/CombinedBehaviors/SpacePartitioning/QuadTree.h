@@ -7,23 +7,26 @@
 
 class SteeringAgent;
 
+struct Quad
+{
+
+};
+
 class QuadTree
 {
 public:
-	QuadTree(float left, float bottom, float width, float height, int capacity);
+	QuadTree(float left, float bottom, float width, float height, size_t capacity);
 
-	void AddAgent(SteeringAgent* agent);
-
+	bool AddAgent(SteeringAgent* pAgent);
 	void Subdivide();
+	void RegisterNeighbours(SteeringAgent* pAgent, float queryRadius, std::vector<SteeringAgent*>& pNeighbours, int& nrOfNeighbours);
 
 	void Render();
 
 private:
-	Elite::Vector2 m_Pos;
-	float m_Width;
-	float m_Height;
+	Elite::Rect m_BoundingBox;
 
-	int m_Capacity;
+	size_t m_Capacity;
 
 	std::list<SteeringAgent*> m_pAgents;
 
@@ -33,6 +36,4 @@ private:
 	QuadTree* m_pBottomRight;
 
 	bool m_IsDivided;
-
-	bool IsAgentInRect(SteeringAgent* agent);
 };

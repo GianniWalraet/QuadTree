@@ -12,7 +12,7 @@ class Flock
 {
 public:
 	Flock(
-		int flockSize = 50,
+		int flockSize = 3000,
 		float worldSize = 500.f,
 		SteeringAgent* pAgentToEvade = nullptr,
 		bool trimWorld = false);
@@ -34,7 +34,6 @@ private:
 	// flock agents
 	int m_FlockSize = 0;
 	vector<SteeringAgent*> m_pAgents;
-	//vector<Elite::Vector2> m_OldPositions;
 		 
 	// neighborhood agents
 	vector<SteeringAgent*> m_pNeighbors;
@@ -50,7 +49,7 @@ private:
 
 	//Debug
 	bool m_CanDebugRender = false;
-	bool m_UseSpatialPartitioning = true;
+	bool m_RenderQuadTree = false;
 	
 	// steering Behaviors
 	BlendedSteering* m_pBlendedSteering = nullptr;
@@ -63,7 +62,7 @@ private:
 	PrioritySteering* m_pPrioritySteering = nullptr;
 	Evade* m_pEvade = nullptr;
 
-	// Spatial Partitioning
+	// Quad Tree
 	QuadTree* m_QuadTree = nullptr;
 
 	// private functions

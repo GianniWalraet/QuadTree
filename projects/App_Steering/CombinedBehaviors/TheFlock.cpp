@@ -54,8 +54,6 @@ Flock::Flock(
 		m_pAgents[i]->SetAutoOrient(true);
 		m_pAgents[i]->SetMass(1.f);
 
-		//m_pCellSpace->AddAgent(m_pAgents[i]);
-		//m_OldPositions[i] = m_pAgents[i]->GetPosition();
 		m_QuadTree->AddAgent(m_pAgents[i]);
 	}
 
@@ -82,7 +80,6 @@ Flock::~Flock()
 	SAFE_DELETE(m_pBlendedSteering);
 	SAFE_DELETE(m_pPrioritySteering);
 	SAFE_DELETE(m_pAgentToEvade);
-	//SAFE_DELETE(m_pCellSpace);
 	SAFE_DELETE(m_QuadTree);
 
 	for (size_t i = 0; i < m_pAgents.size(); i++)
@@ -100,16 +97,11 @@ void Flock::Update(float deltaT, const TargetData& target)
 
 	m_pSeek->SetTarget(target);
 
-	//Elite::Vector2 oldPos{};
-	//size_t idx{};
 	for (SteeringAgent* agent : m_pAgents)
 	{
 		RegisterNeighbors(agent);
 		agent->Update(deltaT);
 		agent->TrimToWorld({0,0}, {m_WorldSize, m_WorldSize});
-
-		//m_OldPositions[idx] = agent->GetPosition();
-		//++idx;
 	}
 	
 	m_pEvade->SetTarget(m_pAgentToEvade->GetPosition());
@@ -124,10 +116,11 @@ void Flock::Render(float deltaT)
 	{
 		DEBUGRENDERER2D->DrawCircle(m_pAgents[0]->GetPosition(), m_NeighborhoodRadius, { 0,0,1 }, -0.5f);
 		m_pAgents[0]->Render(deltaT);
-
-
 	}
 	m_pAgents[0]->SetRenderBehavior(m_CanDebugRender);
+
+	if (m_RenderQuadTree)
+		m_QuadTree->Render();
 	////////////
 }
 
@@ -171,7 +164,7 @@ void Flock::UpdateAndRenderUI()
 
 	// Implement checkboxes and sliders here
 	ImGui::Checkbox("Debug Rendering", &m_CanDebugRender);
-	ImGui::Checkbox("Spatial Partitioning", &m_UseSpatialPartitioning);
+	ImGui::Checkbox("Debug QuadTree", &m_RenderQuadTree);
 	/*ImGui::Checkbox("Trim World", &m_TrimWorld);
 	if (m_TrimWorld)
 	{
@@ -201,6 +194,8 @@ void Flock::RegisterNeighbors(SteeringAgent* pAgent)
 	// register the agents neighboring the currently evaluated agent
 	// store how many they are, so you know which part of the vector to loop over
 	m_NrOfNeighbors = 0;
+
+	m_QuadTree->RegisterNeighbours(pAgent, m_NeighborhoodRadius, m_pNeighbors, m_NrOfNeighbors);
 }
 
 Elite::Vector2 Flock::GetAverageNeighborPos() const
@@ -213,7 +208,7 @@ Elite::Vector2 Flock::GetAverageNeighborPos() const
 	for (int i = 0; i < m_NrOfNeighbors; i++)
 		positionsSum += m_pNeighbors[i]->GetPosition();
 
-	return (positionsSum / m_NrOfNeighbors);
+	return (positionsSum / float(m_NrOfNeighbors));
 }
 
 Elite::Vector2 Flock::GetAverageNeighborVelocity() const
@@ -226,7 +221,7 @@ Elite::Vector2 Flock::GetAverageNeighborVelocity() const
 	for (int i = 0; i < m_NrOfNeighbors; i++)
 		velocitiesSum += m_pNeighbors[i]->GetLinearVelocity();
 
-	return (velocitiesSum / m_NrOfNeighbors);
+	return (velocitiesSum / float(m_NrOfNeighbors));
 }
 
 

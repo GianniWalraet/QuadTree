@@ -155,12 +155,20 @@ namespace Elite
 		Vector2 bottomLeft;
 		float width;
 		float height;
+
+		bool IsPointInRect(const Vector2& p)
+		{
+			return ((p.x > (bottomLeft.x - width)) &&
+				(p.x < (bottomLeft.x + width)) &&
+				(p.y > (bottomLeft.y - height)) &&
+				(p.y < (bottomLeft.y + height)));
+		}
 	};
 
 	inline bool IsOverlapping(const Rect& a, const Rect& b)
 	{
 		// If one rectangle is on left side of the other
-		if (a.bottomLeft.x + a.width < b.bottomLeft.x|| b.bottomLeft.x + b.width < a.bottomLeft.x)
+		if (a.bottomLeft.x + a.width < b.bottomLeft.x || b.bottomLeft.x + b.width < a.bottomLeft.x)
 		{
 			return false;
 		}
