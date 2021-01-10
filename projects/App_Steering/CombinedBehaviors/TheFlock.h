@@ -13,7 +13,7 @@ class Flock
 public:
 	Flock(
 		int flockSize = 3000,
-		float worldSize = 500.f,
+		float worldSize = 500,
 		SteeringAgent* pAgentToEvade = nullptr,
 		bool trimWorld = false);
 
@@ -23,7 +23,6 @@ public:
 	void UpdateAndRenderUI();
 	void Render(float deltaT);
 
-	void RegisterNeighbors(SteeringAgent* pAgent);
 	int GetNrOfNeighbors() const { return m_NrOfNeighbors; }
 	const vector<SteeringAgent*>& GetNeighbors() const { return m_pNeighbors; }
 
@@ -63,7 +62,7 @@ private:
 	Evade* m_pEvade = nullptr;
 
 	// Quad Tree
-	QuadTree* m_QuadTree = nullptr;
+	QuadTree* m_pQuadTree = nullptr;
 
 	// private functions
 	float* GetWeight(ISteeringBehavior* pBehaviour);

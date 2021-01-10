@@ -39,7 +39,7 @@ Flock::Flock(
 	m_pAgents.resize(m_FlockSize);
 
 	// Spatial Partitioning (Toggle Spatial Partitioning when running the program)
-	m_QuadTree = new QuadTree(m_WorldSize / 2.f, m_WorldSize / 2.f, m_WorldSize / 2.f, m_WorldSize / 2.f, 4);
+	m_pQuadTree = new QuadTree(0, 0, m_WorldSize, m_WorldSize, 4);
 	
 	// Initialize Agents
 	Elite::Vector2 randomPos{};
@@ -50,11 +50,11 @@ Flock::Flock(
 		m_pAgents[i] = new SteeringAgent();
 		m_pAgents[i]->SetSteeringBehavior(m_pPrioritySteering);
 		m_pAgents[i]->SetPosition(randomPos);
-		m_pAgents[i]->SetMaxLinearSpeed(15.f);
+		m_pAgents[i]->SetMaxLinearSpeed(50.f);
 		m_pAgents[i]->SetAutoOrient(true);
 		m_pAgents[i]->SetMass(1.f);
 
-		m_QuadTree->AddAgent(m_pAgents[i]);
+		m_pQuadTree->AddAgent(m_pAgents[i]);
 	}
 
 	// Initialize AgentToEvade
@@ -63,7 +63,7 @@ Flock::Flock(
 	m_pAgentToEvade = new SteeringAgent();
 	m_pAgentToEvade->SetSteeringBehavior(m_pWander);
 	m_pAgentToEvade->SetPosition(randomPos);
-	m_pAgentToEvade->SetMaxLinearSpeed(15.f);
+	m_pAgentToEvade->SetMaxLinearSpeed(50.f);
 	m_pAgentToEvade->SetAutoOrient(true);
 	m_pAgentToEvade->SetMass(1.f);
 	m_pAgentToEvade->SetBodyColor({ 0,0,1 });
@@ -80,7 +80,7 @@ Flock::~Flock()
 	SAFE_DELETE(m_pBlendedSteering);
 	SAFE_DELETE(m_pPrioritySteering);
 	SAFE_DELETE(m_pAgentToEvade);
-	SAFE_DELETE(m_QuadTree);
+	SAFE_DELETE(m_pQuadTree);
 
 	for (size_t i = 0; i < m_pAgents.size(); i++)
 	{
@@ -97,11 +97,15 @@ void Flock::Update(float deltaT, const TargetData& target)
 
 	m_pSeek->SetTarget(target);
 
-	for (SteeringAgent* agent : m_pAgents)
+	for (SteeringAgent* pAgent : m_pAgents)
 	{
-		RegisterNeighbors(agent);
-		agent->Update(deltaT);
-		agent->TrimToWorld({0,0}, {m_WorldSize, m_WorldSize});
+		m_pQuadTree->Update(pAgent);
+
+		m_NrOfNeighbors = 0;
+		m_pQuadTree->RegisterNeighbours(pAgent, m_NeighborhoodRadius, m_pNeighbors, m_NrOfNeighbors);
+
+		pAgent->Update(deltaT);
+		pAgent->TrimToWorld({0,0}, {m_WorldSize, m_WorldSize});
 	}
 	
 	m_pEvade->SetTarget(m_pAgentToEvade->GetPosition());
@@ -120,7 +124,7 @@ void Flock::Render(float deltaT)
 	m_pAgents[0]->SetRenderBehavior(m_CanDebugRender);
 
 	if (m_RenderQuadTree)
-		m_QuadTree->Render();
+		m_pQuadTree->Render();
 	////////////
 }
 
@@ -187,15 +191,6 @@ void Flock::UpdateAndRenderUI()
 	ImGui::PopAllowKeyboardFocus();
 	ImGui::End();
 	
-}
-
-void Flock::RegisterNeighbors(SteeringAgent* pAgent)
-{
-	// register the agents neighboring the currently evaluated agent
-	// store how many they are, so you know which part of the vector to loop over
-	m_NrOfNeighbors = 0;
-
-	m_QuadTree->RegisterNeighbours(pAgent, m_NeighborhoodRadius, m_pNeighbors, m_NrOfNeighbors);
 }
 
 Elite::Vector2 Flock::GetAverageNeighborPos() const

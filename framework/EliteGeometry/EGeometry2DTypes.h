@@ -155,14 +155,6 @@ namespace Elite
 		Vector2 bottomLeft;
 		float width;
 		float height;
-
-		bool IsPointInRect(const Vector2& p)
-		{
-			return ((p.x > (bottomLeft.x - width)) &&
-				(p.x < (bottomLeft.x + width)) &&
-				(p.y > (bottomLeft.y - height)) &&
-				(p.y < (bottomLeft.y + height)));
-		}
 	};
 
 	inline bool IsOverlapping(const Rect& a, const Rect& b)
