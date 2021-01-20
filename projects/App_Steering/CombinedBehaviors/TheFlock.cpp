@@ -38,7 +38,7 @@ Flock::Flock(
 	//m_OldPositions.resize(m_FlockSize);
 	m_pAgents.resize(m_FlockSize);
 
-	// Spatial Partitioning (Toggle Spatial Partitioning when running the program)
+	// QuadTree
 	m_pQuadTree = new QuadTree(0, 0, m_WorldSize, m_WorldSize, 4);
 	
 	// Initialize Agents

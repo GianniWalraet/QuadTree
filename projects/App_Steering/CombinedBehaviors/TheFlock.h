@@ -12,7 +12,7 @@ class Flock
 {
 public:
 	Flock(
-		int flockSize = 3000,
+		int flockSize = 50,
 		float worldSize = 500,
 		SteeringAgent* pAgentToEvade = nullptr,
 		bool trimWorld = false);

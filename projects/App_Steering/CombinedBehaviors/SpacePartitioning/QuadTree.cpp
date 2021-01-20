@@ -84,11 +84,6 @@ void QuadTree::RegisterNeighbours(SteeringAgent* pAgent, float queryRadius, std:
 	Elite::Vector2 bottomLeft = { pos.x - queryRadius, pos.y - queryRadius };
 	Elite::Rect queryBox{ bottomLeft, queryRadius * 2, queryRadius * 2 };
 
-	//DEBUGRENDERER2D->DrawSegment(Elite::Vector2(queryBox.bottomLeft.x, queryBox.bottomLeft.y), Elite::Vector2(queryBox.bottomLeft.x + queryBox.width, queryBox.bottomLeft.y), { 0,1,0 }, 0.1f);
-	//DEBUGRENDERER2D->DrawSegment(Elite::Vector2(queryBox.bottomLeft.x + queryBox.width, queryBox.bottomLeft.y), Elite::Vector2(queryBox.bottomLeft.x + queryBox.width, queryBox.bottomLeft.y + queryBox.height), { 0,1,0 }, 0.1f);
-	//DEBUGRENDERER2D->DrawSegment(Elite::Vector2(queryBox.bottomLeft.x + queryBox.width, queryBox.bottomLeft.y + queryBox.height), Elite::Vector2(queryBox.bottomLeft.x, queryBox.bottomLeft.y + queryBox.height), { 0,1,0 }, 0.1f);
-	//DEBUGRENDERER2D->DrawSegment(Elite::Vector2(queryBox.bottomLeft.x, queryBox.bottomLeft.y + queryBox.height), Elite::Vector2(queryBox.bottomLeft.x, queryBox.bottomLeft.y), { 0,1,0 }, 0.1f);
-
 	// return if agent query is not overlapping with the current quad
 	if (!Elite::IsOverlapping(m_BoundingBox, queryBox))
 		return;

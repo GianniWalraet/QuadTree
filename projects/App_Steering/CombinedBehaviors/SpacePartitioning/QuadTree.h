@@ -7,11 +7,6 @@
 
 class SteeringAgent;
 
-struct Quad
-{
-
-};
-
 class QuadTree
 {
 public:
@@ -42,3 +37,4 @@ private:
 
 	bool IsAgentInBounds(const Elite::Rect& r, const Elite::Vector2& p);
 };
+
