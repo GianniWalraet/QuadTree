@@ -1,4 +1,5 @@
 # QuadTree
+## Introduction
 I am a student from HoWest DAE in Belgium and the following is an implementation of my research project for the class Gameplay Programming. My chosen topic is the QuadTree.
 
 ## Description
