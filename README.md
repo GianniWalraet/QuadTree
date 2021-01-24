@@ -8,6 +8,7 @@ A quadtree is a tree data structure in which each node has exactly 4 children. T
 also be subsectioned into 4, etc... We call it a tree because each node has a reference to all 4 of its subsections. Each quad has a set capacity, when that capacity is reached
 the quad will subdivide itself into 4 new subsections.
 
+![](https://github.com/GianniWalraet/QuadTree/blob/master/Media/DataStructureExample.png)
 
 ### What is the purpose of a quadtree?
 Let's think of a scenario where we have a space filled with agents. These agents must be able to interact with eachother. The fastest way to do this is to have each agent check
